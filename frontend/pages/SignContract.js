@@ -7,7 +7,7 @@ import { useWeb3React } from "@web3-react/core";
 import { ethers } from 'ethers';
 
 
-export default function JobUploads() {
+export default function SignContract() {
     
     const { activate, active, library: provider } = useWeb3React();
 
@@ -196,8 +196,8 @@ export default function JobUploads() {
       const contract = new ethers.Contract(contractAddress, contractABI, signer)
 
       try {
-        await contract.createService(username, email, password)
-        alert("Service created")
+        await contract.signingContract(username)
+        alert("Signed Contract")
       } catch (error) {
         console.log(error)
       }
@@ -229,7 +229,6 @@ export default function JobUploads() {
 
   const validate = (formData) => {
     const errors = {}
-    const email_regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
 
     if (!formData.username) {
       errors.username_error = "Username is required"
@@ -260,13 +259,13 @@ export default function JobUploads() {
             <div className='mb-4 mr-auto ml-auto'>
             </div>
             <div className="mb-3">
-                <label for="username" className="form-label">Title</label>
+                <label for="username" className="form-label">Contract Address</label>
                 <input
                 type="text"
                 className="form-control"
                 id="username"
                 name="username"
-                placeholder="Job Title"
+                placeholder="Contract Address"
                 value={username}
                 onChange={onChange}
                 />
@@ -274,38 +273,8 @@ export default function JobUploads() {
                     { formErrors.username_error }
                 </div>
             </div>
-            <div className="mb-3">
-                <label for="email" className="form-label">Service Description</label>
-                <textarea
-                type="text"
-                className="form-control"
-                id="email"
-                name="email"
-                placeholder="Service Description"
-                value={email}
-                onChange={onChange}
-                />
-                <div className="invalid-data" style={{"color": "red"}}>
-                    { formErrors.email_error }
-                </div>
-            </div>
-            <div className="mb-3">
-                <label for="password" className="form-label">Price For Service</label>
-                <input
-                type="number"
-                className="form-control"
-                id="password"
-                name="password"
-                placeholder="Price For Service"
-                value={password}
-                onChange={onChange}
-                />
-                <div className="invalid-data" style={{"color": "red"}}>
-                    { formErrors.password_error }
-                </div>
-            </div>
             <div>
-                <button type="submit" className="btn btn-dark">Register</button>
+                <button type="submit" className="btn btn-dark">Sign Contract</button>
             </div>
             </fieldset>
         </form>

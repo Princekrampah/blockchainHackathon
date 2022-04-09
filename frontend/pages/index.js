@@ -28,7 +28,7 @@ export default function Home() {
     // Node connection >>> metamask
     if (active) {
       const signer = provider.getSigner();
-      const contractAddress = "0x2ae93561f453B6EDA706999974EF9EEc070a0415"
+      const contractAddress = "0x05B1a1Bf48D40676e65b7E3C9a1Fe036099cF7C1"
       const contractABI = [
         {
           "inputs": [
@@ -201,7 +201,7 @@ export default function Home() {
                       <br></br>
                       Service Fee: { services.payment.toString() } Ksh
                     </Card.Text>
-                    <Button variant="primary">Go somewhere</Button>
+                    <a href="/SignContract" className='btn btn-outline-info'>Sign Contract</a>
                   </Card.Body>
                 </Card>
               </div> :

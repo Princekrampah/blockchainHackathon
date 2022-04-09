@@ -31,12 +31,13 @@ export default function NavBar() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Navbar>
+      <Navbar variant="dark" bg="dark">
+        {/* https://drive.google.com/file/d/1848FBXTqPIYWHVmtFIoPbM95cjhHcBH4/view?usp=sharing */}
         <Container>
           <Navbar.Brand href="/">
             <img
             alt=""
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/MetaMask_Fox.svg/1200px-MetaMask_Fox.svg.png"
+            src="https://drive.google.com/uc?export=view&id=1848FBXTqPIYWHVmtFIoPbM95cjhHcBH4"
             width="30"
             height="30"
             className="d-inline-block align-top"
@@ -46,9 +47,16 @@ export default function NavBar() {
           <Navbar.Collapse className="justify-content-end">
           <Nav className="me-auto">
             <Nav.Link href="/JobUploads">Upload Service</Nav.Link>
+            <Nav.Link href="/WorkHistory">Work History</Nav.Link>
           </Nav>
             <Navbar.Text>
-              Connect to Metamask :  {'   '}{active ? <Button size='sm'>Metamask Connected</Button> : (
+              <img
+              alt=""
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/MetaMask_Fox.svg/1200px-MetaMask_Fox.svg.png"
+              width="30"
+              height="30"
+              className="d-inline-block align-top"
+            />{' '}:  {'   '}{active ? <Button size='sm'>Metamask Connected</Button> : (
               <Button variant="outline-primary" size='sm' onClick={() => connect()}>Connect</Button>
             )}
             </Navbar.Text>
