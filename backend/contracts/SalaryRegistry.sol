@@ -14,11 +14,12 @@ contract SalaryRegistry{
     // mappings we need to store different info
     mapping(address => JobDescription) public service;
     mapping(address => address) public signings;
+    JobDescription[] public services;
 
     
-    function createService(string memory _title, string memory _description, uint256 _payment, address _user_address) public {
-        JobDescription memory job_desc = JobDescription(_title, _description, _payment, _user_address);
-
+    function createService(string memory _title, string memory _description, uint256 _payment) public {
+        JobDescription memory job_desc = JobDescription(_title, _description, _payment, msg.sender);
+        services.push(job_desc);
         // save the job in the mapping with the address of the sender(caller)
         service[msg.sender] = job_desc;
     }

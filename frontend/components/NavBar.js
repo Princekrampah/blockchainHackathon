@@ -40,7 +40,7 @@ export default function NavBar() {
             width="30"
             height="30"
             className="d-inline-block align-top"
-          />{' '} Anonymous
+          />{' '} TASK IT
           </Navbar.Brand>
           <Navbar.Toggle />
           <Navbar.Collapse className="justify-content-end">

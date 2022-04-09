@@ -4,16 +4,170 @@ import styles from '../styles/Home.module.css'
 import { useWeb3React } from "@web3-react/core";
 import { InjectedConnector } from "@web3-react/injected-connector";
 import { ethers } from 'ethers';
-import { Button, Navbar, Container } from 'react-bootstrap';
-import { useEffect } from "react"
+import { Button, Card } from 'react-bootstrap';
+import { useEffect, useState } from "react"
 
 const injected = new InjectedConnector()
 
 export default function Home() {
-  const { activate, active, library: provider } = useWeb3React();
-  useEffect(() => {
 
+  // set services
+  const [services, setServices] = useState([])
+  const [servicesAvailable, setServicesAvailable] = useState(false)
+
+  const { activate, active, library: provider } = useWeb3React();
+
+  useEffect(() => {
+    getServices()
   }, [])
+
+
+  const getServices = async () => {
+    // address
+    // ABI
+    // Node connection >>> metamask
+    if (active) {
+      const signer = provider.getSigner();
+      const contractAddress = "0x2ae93561f453B6EDA706999974EF9EEc070a0415"
+      const contractABI = [
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "_title",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "_description",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_payment",
+              "type": "uint256"
+            }
+          ],
+          "name": "createService",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "name": "service",
+          "outputs": [
+            {
+              "internalType": "string",
+              "name": "title",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "description",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "payment",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "user_address",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "name": "services",
+          "outputs": [
+            {
+              "internalType": "string",
+              "name": "title",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "description",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "payment",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "user_address",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_job_address",
+              "type": "address"
+            }
+          ],
+          "name": "signingContract",
+          "outputs": [],
+          "stateMutability": "payable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "name": "signings",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        }
+      ]
+      const contract = new ethers.Contract(contractAddress, contractABI, signer)
+
+      try {
+        const obtainedService = await contract.services(0)
+        setServices(obtainedService)
+        setServicesAvailable(true)
+        console.log(services)
+      } catch (error) {
+        console.log(error)
+      }
+    } else {
+      alert("Not connected to wallet")
+    }
+}
 
   return (
     <div className={styles.container}>
@@ -25,9 +179,45 @@ export default function Home() {
 
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Anonymous
-        </h1>
+
+        {active ? (
+          <>
+            <h1 className='mx-auto'>
+              Click on the button below to get available services
+            </h1>
+            <Button variant="outline-primary m-4" size='sm' var onClick={() => getServices()}>Get Offered Services</Button>
+            { servicesAvailable ? 
+              <div>
+                <Card>
+                  <Card.Header>Service Listing</Card.Header>
+                  <Card.Body>
+                    <Card.Title>{ services.title }</Card.Title>
+                    <Card.Text>
+                      { services.description }
+                      <br></br>
+                      <br></br>
+                      Contract address: { services.user_address }
+                      <br></br>
+                      <br></br>
+                      Service Fee: { services.payment.toString() } Ksh
+                    </Card.Text>
+                    <Button variant="primary">Go somewhere</Button>
+                  </Card.Body>
+                </Card>
+              </div> :
+
+              <h1>No services available</h1>
+            }
+          </>
+        ) : (
+          <>
+            <h1 className={styles.title}>
+              MetaMask Connection Required
+            </h1>
+            <h5>Kindly connect your Metamask wallet to begin..!</h5>
+          </>
+            )
+          }
       </main>
 
 

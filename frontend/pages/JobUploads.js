@@ -3,9 +3,13 @@ import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import {Form, Button} from 'react-bootstrap'
 import React, {useState, useEffect} from 'react'
+import { useWeb3React } from "@web3-react/core";
+import { ethers } from 'ethers';
 
 
 export default function JobUploads() {
+    
+    const { activate, active, library: provider } = useWeb3React();
 
   const [formData, setFormDate] = useState({
     username: "",
@@ -55,27 +59,173 @@ export default function JobUploads() {
 
 //   }, [user, isError, isSuccess, message, navigate, dispatch, isLoading])
 
-
-
-  const onSubmit = (e) => {
+  // execute
+  const onSubmit = async (e) => {
     e.preventDefault()
-    // console.log("Yes")
-    setFormErrors(validate(formData))
+    // address
+    // ABI
+    // Node connection >>> metamask
+    if (active) {
+      const signer = provider.getSigner();
+      const contractAddress = "0x2ae93561f453B6EDA706999974EF9EEc070a0415"
+      const contractABI = [
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "_title",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "_description",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_payment",
+              "type": "uint256"
+            }
+          ],
+          "name": "createService",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "name": "service",
+          "outputs": [
+            {
+              "internalType": "string",
+              "name": "title",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "description",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "payment",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "user_address",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "name": "services",
+          "outputs": [
+            {
+              "internalType": "string",
+              "name": "title",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "description",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "payment",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "user_address",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_job_address",
+              "type": "address"
+            }
+          ],
+          "name": "signingContract",
+          "outputs": [],
+          "stateMutability": "payable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "name": "signings",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        }
+      ]
+      const contract = new ethers.Contract(contractAddress, contractABI, signer)
 
-    console.log(formErrors.length)
-
-    if (!formErrors.length) {
-      // console.log("Form submitted")
-      const name = username
-
-      const userData = {
-        name,
-        email,
-        password
+      try {
+        await contract.createService(username, email, password)
+        alert("Service created")
+      } catch (error) {
+        console.log(error)
       }
-      console.log(userData)
+    } else {
+      alert("Not connected to wallet")
     }
-  }
+}
+
+
+//   const onSubmit = (e) => {
+//     e.preventDefault()
+//     // console.log("Yes")
+//     setFormErrors(validate(formData))
+
+//     console.log(formErrors.length)
+
+//     if (!formErrors.length) {
+//       // console.log("Form submitted")
+//       const name = username
+
+//       const userData = {
+//         name,
+//         email,
+//         password
+//       }
+//       console.log(userData)
+//     }
+//   }
 
   const validate = (formData) => {
     const errors = {}
