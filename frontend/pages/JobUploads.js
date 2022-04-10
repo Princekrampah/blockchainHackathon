@@ -5,11 +5,14 @@ import {Form, Button} from 'react-bootstrap'
 import React, {useState, useEffect} from 'react'
 import { useWeb3React } from "@web3-react/core";
 import { ethers } from 'ethers';
+import swal from 'sweetalert';
+import { useRouter } from 'next/router';
 
 
 export default function JobUploads() {
     
     const { activate, active, library: provider } = useWeb3React();
+    const router = useRouter()
 
   const [formData, setFormDate] = useState({
     username: "",
@@ -67,7 +70,7 @@ export default function JobUploads() {
     // Node connection >>> metamask
     if (active) {
       const signer = provider.getSigner();
-      const contractAddress = "0x05B1a1Bf48D40676e65b7E3C9a1Fe036099cF7C1"
+      const contractAddress = "0x6f99e2922cbba08e24fb6084218a8638bd230194"
       const contractABI = [
         {
           "inputs": [
@@ -197,7 +200,14 @@ export default function JobUploads() {
 
       try {
         await contract.createService(username, email, password)
-        alert("Service created")
+        swal({
+          title: "Service Created",
+          text: "Service successfully created",
+          icon: "success",
+          button: "Okay",
+        }).then(
+          router.push('/')
+        );
       } catch (error) {
         console.log(error)
       }
@@ -306,6 +316,10 @@ export default function JobUploads() {
             </div>
             <div>
                 <button type="submit" className="btn btn-dark">Register</button>
+            </div>
+            <div>
+              <p className='mt-4'>By clicking register, you agree to all the terms and services of Task It.</p> {" "}
+              <a href="/Terms">Terms and services</a>
             </div>
             </fieldset>
         </form>
